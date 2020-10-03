@@ -2,8 +2,7 @@ package no.oslomet.cs.algdat;
 
 import java.util.Comparator;
 import java.util.Iterator;
-import java.util.Objects;
-public class DobbeltLenketListe<T> implements Liste<T> {
+import java.util.Objects; class DobbeltLenketListe<T> implements Liste<T> {
     private static final class Node<T>   // en indre nodeklasse
     {
         // instansvariabler
@@ -29,14 +28,21 @@ public class DobbeltLenketListe<T> implements Liste<T> {
     private Node<T> hale;          // peker til den siste i listen
     private int antall;            // antall noder i listen
     private int endringer;   // antall endringer i listen
-    
+
+    // legge til en konstruktør
+    public DobbeltLenketListe(){
+
+        hode = hale = null;
+        antall = 0;
+        endringer = 0;
+    }
 
     // konstruktør
     public DobbeltLenketListe(T[] a) {
         this();
 
         int i = 0;
-        for (; i < a.length; i++) ;
+        for (; i < a.length && a[i]==null; i++) ; // fikset her
 
         if (i < a.length) {
             Node<T> p = hode = hale = new Node<>(a[i], null, null);  // den første noden
