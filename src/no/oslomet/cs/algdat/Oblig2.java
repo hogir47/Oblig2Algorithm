@@ -128,7 +128,8 @@ import java.util.Objects;
           Objects.requireNonNull(verdi);
           if(tom()) hode = hale = new Node<>(verdi, null, null);
           else hale = hale.neste = new Node<>(verdi,hale, null);
-
+            antall++;
+            endringer++;
           return true;
       }
 
