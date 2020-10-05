@@ -2,21 +2,22 @@ package no.oslomet.cs.algdat;
 
 import java.util.Comparator;
 import java.util.Iterator;
-import java.util.Objects; class DobbeltLenketListe<T> implements Liste<T> {
+import java.util.Objects;
+  class DobbeltLenketListe<T> implements Liste<T> {
     private static final class Node<T>   // en indre nodeklasse
-    {
+       {
         // instansvariabler
-        private T verdi;
-        private Node<T> forrige, neste;
+          private T verdi;
+          private Node<T> forrige, neste;
 
-        private Node(T verdi, Node<T> forrige, Node<T> neste)  // konstruktør
-        {
-            this.verdi = verdi;
-            this.forrige = forrige;
-            this.neste = neste;
-        }
+                private Node(T verdi, Node<T> forrige, Node<T> neste)  // konstruktør
+                {
+                    this.verdi = verdi;
+                this.forrige = forrige;
+                this.neste = neste;
+                }
 
-        protected Node(T verdi)  // konstruktør
+            protected Node(T verdi)  // konstruktør
         {
             this(verdi, null, null);
         }
@@ -60,6 +61,10 @@ import java.util.Objects; class DobbeltLenketListe<T> implements Liste<T> {
 
 
     }
+    // subliste
+
+
+
 
     @Override
     public int antall() {
@@ -70,6 +75,51 @@ import java.util.Objects; class DobbeltLenketListe<T> implements Liste<T> {
     public boolean tom() {
         return antall == 0;
     }
+
+
+      @Override
+      public String toString()
+      {
+          StringBuilder s = new StringBuilder();
+          s.append('[');
+
+              Node<T> p = hode;
+              s.append(p.verdi);
+              p = p.neste;
+              while (p!=null){
+                  s.append(',').append(' ').append(p.verdi);
+                  p = p.neste;
+              }
+
+          s.append(']');
+          return s.toString();
+      }
+      public String omvendtString()
+      {
+          StringBuilder s = new StringBuilder();
+          s.append('[');
+
+              Node<T> p = hale;
+              s.append(p.verdi);
+              p = p.forrige;
+              while (p!=null){
+                  s.append(',').append(' ').append(p.verdi);
+                  p = p.forrige;
+              }
+
+          s.append(']');
+          return s.toString();
+      }
+
+      @Override
+      public boolean leggInn(T verdi)
+      {
+          Objects.requireNonNull(verdi);
+          if(tom()) hode = hale = new Node<>(verdi, null, null);
+          else hale = hale.neste = new Node<>(verdi,hale, null);
+
+          return true;
+      }
 
 
 }
