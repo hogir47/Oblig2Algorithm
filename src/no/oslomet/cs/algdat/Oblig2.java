@@ -147,8 +147,23 @@ class DobbeltLenketListe<T> implements Liste<T> {
         endringer++;
         return true;
     }
+    //oppgave 5
     @Override
     public void leggInn(int indeks, T verdi) {
+        Objects.requireNonNull(verdi,"null er ikke tillatt");
+        indekskontroll(indeks,true);
+        if(indeks==0){
+            hode= new Node<>(verdi,hode);
+        }
+        else if (indeks==antall){
+            hale=hale.neste=new Node<>(verdi);
+        }
+        else {
+                Node<T> p =finnNode(indeks-1);
+                p.neste= new Node<>(verdi,p.neste);
+        }
+        endringer++;
+        antall++;
     }
     // oppgave 4
     @Override
