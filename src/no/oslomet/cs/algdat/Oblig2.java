@@ -18,6 +18,9 @@ class DobbeltLenketListe<T> implements Liste<T> {
         {
             this(verdi, null, null);
         }
+
+        public Node(T verdi, Node< T > hode) {
+        }
     } // Node
     // instansvariabler
     private Node<T> hode;          // peker til den første i listen
@@ -153,7 +156,7 @@ class DobbeltLenketListe<T> implements Liste<T> {
         Objects.requireNonNull(verdi,"null er ikke tillatt");
         indekskontroll(indeks,true);
         if(indeks==0){
-            hode= new Node<>(verdi,hode);
+            hode= new Node<T>(verdi,hode);
         }
         else if (indeks==antall){
             hale=hale.neste=new Node<>(verdi);
@@ -204,13 +207,79 @@ class DobbeltLenketListe<T> implements Liste<T> {
         endringer++;
         return gammelverdi;
     }
+    
+    //oppgave 6
     @Override
     public boolean fjern(T verdi) {
-        return false;
+        Node<T> node= hode;
+        while (node!=null){
+            if (node.verdi.equals(verdi)){
+                break;
+            }
+            node=node.neste;
+        }
+        if (node==hode){
+            hode=hode.neste;
+            if(hode!=null){
+                hode.forrige=null;
+            }
+            else {
+                hale=null;
+            }
+        }
+             else if(node==hale){
+                 hale=hale.forrige;
+                 hale.neste=null;
+        }
+             antall--;
+             endringer++;
+    
+        return true;
     }
     @Override
     public T fjern(int indeks) {
-        return null;
+        indekskontroll(indeks,false);
+        Node<T>node;
+        T verdi;
+        if(antall==1){
+            verdi=hode.verdi;
+            
+        }
+        else if (indeks==0){
+            if (antall==2){
+                hale.neste=null;
+                hode.forrige=null;
+            }
+            else {
+                node=hode.neste;
+                node.forrige=null;
+                hode=node;
+            }
+            verdi= hode.verdi;
+        }
+        else if(indeks==antall-1){
+            if(antall==2){
+                hale=hode;
+            }            
+            else{
+                node=hale.forrige;
+                node.neste=null;
+                hale=node;
+                
+            }
+            verdi= hale.verdi;;
+        }
+        else {
+            node=finnNode(indeks);
+            verdi=node.verdi;
+            node.neste.forrige=node.forrige;
+            node.forrige.neste=node.neste;
+        }
+        antall--;
+        endringer++;
+        
+        
+        return verdi;
     }
 
 }
