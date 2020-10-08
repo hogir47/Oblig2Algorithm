@@ -97,8 +97,14 @@ class DobbeltLenketListe<T> implements Liste<T> {
     public boolean tom() {
         return antall == 0;    // listen blir tom hvis antall er 0
     }
+    //oppgave7
     @Override
     public void nullstill() {
+        while (hode!=null){
+            fjern(0);
+            endringer++;
+        }
+        antall=0;
     }
     @Override
     public Iterator< T > iterator() {
