@@ -1,7 +1,6 @@
 package no.oslomet.cs.algdat;
-import java.util.Comparator;
-import java.util.Iterator;
-import java.util.Objects;
+import java.util.*;
+
 class DobbeltLenketListe<T> implements Liste<T> {
     private static final class Node<T>   // en indre nodeklasse
     {
@@ -100,15 +99,64 @@ class DobbeltLenketListe<T> implements Liste<T> {
     //oppgave7
     @Override
     public void nullstill() {
-        while (hode!=null){
-            fjern(0);
-            endringer++;
+        Node<T>node=hode;
+        for (int i= 0; i<antall-1;i++){
+            node=node.neste;
+            node.forrige.neste=null;
+            node.forrige.verdi=null;
         }
+        this.hode=null; // vi kan skrive (hode=hale=null;)
+        this.hale=null; // vi kan skrive (hode=hale=null;)
         antall=0;
+        endringer++;
     }
+
+    // oppgave 8-b
     @Override
     public Iterator< T > iterator() {
-        return null;
+        return new DobbeltLenketListeIterator();
+
+    }
+    //Oppgave 8-d
+
+    public Iterator<T>iterator(int indeks){
+        indekskontroll(indeks,false);
+        return new DobbeltLenketListeIterator(indeks);
+    }
+    private class DobbeltLenketListeIterator implements Iterator<T>{
+        private Node<T> denne;
+        private boolean fjernOk;
+        private int iteratorendringer;
+        private DobbeltLenketListeIterator(){
+            denne =hode;
+            fjernOk=false;
+            iteratorendringer=endringer;
+        }
+           // oppgave 8-c
+        private DobbeltLenketListeIterator(int indeks){
+            denne=finnNode(indeks);
+            fjernOk=false;
+            iteratorendringer=endringer;
+        }
+        @Override
+        public boolean hasNext() {
+            return denne!=null;
+        }
+              // oppgave 8-a
+        @Override
+        public T next() {
+            if(iteratorendringer!=endringer){
+                throw new ConcurrentModificationException("Er ikke lik");
+
+            }
+            if (!hasNext()){
+                throw new NoSuchElementException("Det er ikke flere i listen");
+            }
+            fjernOk=true;
+           T denneVerdi=denne.verdi;
+           denne=denne.neste;
+            return denneVerdi;
+        }
     }
     //Oppgave 2-a
     @Override
@@ -162,14 +210,27 @@ class DobbeltLenketListe<T> implements Liste<T> {
         Objects.requireNonNull(verdi,"null er ikke tillatt");
         indekskontroll(indeks,true);
         if(indeks==0){
-            hode= new Node<T>(verdi,hode);
+            if(antall==0)
+                hode=hale=new Node<>(verdi,null);
+            else {
+                Node<T> p =hode;
+                hode=new Node<>(verdi,null,hode);
+                p.forrige=hode;
+
+            }
         }
         else if (indeks==antall){
-            hale=hale.neste=new Node<>(verdi);
+            hale= hale.neste=new Node<>(verdi,hale,null);
         }
         else {
-                Node<T> p =finnNode(indeks-1);
-                p.neste= new Node<>(verdi,p.neste);
+            Node<T> p= hode;
+            Node<T>q=hode;
+            for(int i=1; i<indeks;i++)
+                p=p.neste;
+            for (int i =1 ;i<indeks+1;i++)
+                q=q.neste;
+                Node<T> r =new Node<T>(verdi,p,q);
+                p.neste= q.forrige=r;
         }
         endringer++;
         antall++;
